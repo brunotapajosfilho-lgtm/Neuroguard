@@ -13,13 +13,6 @@ cell = st.text_input("Celular", placeholder="(92) 99999-9999")
 idade = st.number_input("Idade", 0, 120, 30)
 sexo = st.selectbox("Sexo", ["Masculino", "Feminino"])
 
-biomarcador = st.radio("Biomarcador", ["LDH", "ALP"])
-
-if biomarcador == "LDH":
-    valor = st.number_input("Valor do LDH (U/L)", value=320.0)
-else:
-    valor = st.number_input("Valor da ALP (U/L)", value=95.0)
-
 st.write('')
 
 st.write('')
@@ -91,8 +84,20 @@ if sens == "Muito":
     qualidade = qualidade + 3
 if sens == "Moderado":
     qualidade = qualidade + 2
+pont_max = 26
+
+indice_bucal = round((qualidade / pont_max) * 100)
+indice_bucal = min(indice_bucal, 100)
 
 observacoes = st.text_area("Observações")
+
+biomarcador = st.radio("Biomarcador", ["LDH", "ALP"])
+
+if biomarcador == "LDH":
+    valor = st.number_input("Valor do LDH (U/L)", value=320.0)
+else:
+    valor = st.number_input("Valor da ALP (U/L)", value=95.0)
+
 
 imagem = st.file_uploader("Imagem da Amostra", type=["png", "jpg", "jpeg"])
 
@@ -155,11 +160,109 @@ if st.button("🔬 Analisar Amostra", use_container_width=True):
         except:
             st.info("Adicione assets/cabeca.png")
     st.divider()
+    st.subheader("Relatório de Hábitos Bucais")
 
-    st.subheader("Qualidade dos Hábitos")
-    st.write(
-        f"A qualidade dos seus hábitos de higiene bucal são {qualidade} porcento de qualidade!")
+    st.subheader("Relatório de Hábitos Bucais")
 
+    if indice_bucal <= 20:
+
+        st.success("🟢 Excelente Saúde Bucal")
+
+        st.markdown("#### Possíveis hábitos identificados")
+
+        st.write("• Excelente rotina de higiene bucal.")
+        st.write("• Escovação frequente e eficiente.")
+        st.write("• Uso regular do fio dental.")
+        st.write("• Consultas odontológicas preventivas.")
+        st.write("• Baixa probabilidade de inflamação gengival.")
+
+        st.write("")
+
+        st.markdown("#### Recomendações")
+
+        st.write("• Continue mantendo os hábitos atuais.")
+        st.write("• Realize consultas preventivas a cada seis meses.")
+        st.write("• Mantenha a higiene bucal completa.")
+        st.write("• Continue evitando fatores de risco, como o tabagismo.")
+
+    elif indice_bucal <= 40:
+
+        st.info("🟡 Boa Saúde Bucal")
+
+        st.markdown("#### Possíveis hábitos identificados")
+
+        st.write("• Higiene bucal geralmente adequada.")
+        st.write("• Pequenas falhas podem ocorrer na rotina de limpeza.")
+        st.write("• Possível acúmulo discreto de placa bacteriana.")
+
+        st.write("")
+
+        st.markdown("#### Recomendações")
+
+        st.write("• Intensifique o uso diário do fio dental.")
+        st.write("• Mantenha a escovação após as principais refeições.")
+        st.write("• Realize acompanhamento odontológico preventivo.")
+        st.write("• Reduza o consumo frequente de açúcar.")
+
+    elif indice_bucal <= 60:
+
+        st.warning("🟠 Saúde Bucal Moderada")
+
+        st.markdown("#### Possíveis hábitos identificados")
+
+        st.write("• Escovação insuficiente ou irregular.")
+        st.write("• Uso pouco frequente do fio dental.")
+        st.write("• Possíveis sinais iniciais de gengivite.")
+        st.write("• Acúmulo moderado de placa bacteriana.")
+
+        st.write("")
+
+        st.markdown("#### Recomendações")
+
+        st.write("• Melhorar a rotina diária de higiene bucal.")
+        st.write("• Utilizar fio dental diariamente.")
+        st.write("• Agendar uma avaliação odontológica.")
+        st.write("• Realizar limpeza profissional quando indicada.")
+
+    elif indice_bucal <= 80:
+
+        st.warning("🔴 Saúde Bucal Ruim")
+
+        st.markdown("#### Possíveis hábitos identificados")
+
+        st.write("• Baixa frequência de escovação.")
+        st.write("• Sangramento gengival recorrente.")
+        st.write("• Acúmulo importante de placa bacteriana.")
+        st.write("• Elevado risco para doenças periodontais.")
+
+        st.write("")
+
+        st.markdown("#### Recomendações")
+
+        st.write("• Procurar atendimento odontológico o quanto antes.")
+        st.write("• Corrigir imediatamente os hábitos de higiene.")
+        st.write("• Realizar tratamento periodontal, caso necessário.")
+        st.write("• Evitar fatores agravantes, como o tabagismo.")
+
+    else:
+
+        st.error("🔴 Condição Bucal Crítica")
+
+        st.markdown("#### Possíveis hábitos identificados")
+
+        st.write("• Alto risco para doença periodontal.")
+        st.write("• Múltiplos fatores de risco presentes.")
+        st.write("• Possível comprometimento dos tecidos de suporte dos dentes.")
+        st.write("• Hábitos de higiene insuficientes.")
+
+        st.write("")
+
+        st.markdown("#### Recomendações")
+
+        st.write("• Procurar avaliação odontológica especializada com urgência.")
+        st.write("• Iniciar tratamento periodontal conforme orientação profissional.")
+        st.write("• Reestruturar completamente a rotina de higiene bucal.")
+        st.write("• Manter acompanhamento clínico periódico.")
     st.write('')
     st.write('')
     st.write('')
@@ -172,3 +275,4 @@ if st.button("🔬 Analisar Amostra", use_container_width=True):
 
     st.subheader("Observações")
     st.info("Protótipo para demonstração. Os resultados são simulados.")
+# python -m streamlit run neuroguard.py
