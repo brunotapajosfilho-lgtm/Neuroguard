@@ -1,8 +1,15 @@
 from typing import Literal
 
 import streamlit as st
+import math
+import streamlit.components.v1 as components 
 
 st.set_page_config(page_title="NeuroGuard", page_icon="🧠", layout="centered")
+
+try:
+    st.image("assets/banner.png", use_container_width=True)
+except:
+    st.info("Adicione assets/banner.png")
 
 st.title("🧠 NEUROGUARD")
 st.caption("Sistema Inteligente para Análise de Biomarcadores")
@@ -91,6 +98,11 @@ indice_bucal = min(indice_bucal, 100)
 
 observacoes = st.text_area("Observações")
 
+st.write("")
+st.divider()
+
+st.subheader("Pesquisa de Biomarcadores")
+
 biomarcador = st.radio("Biomarcador", ["LDH", "ALP"])
 
 if biomarcador == "LDH":
@@ -141,11 +153,14 @@ if st.button("🔬 Analisar Amostra", use_container_width=True):
     st.write(f"**{biomarcador}:** {valor} U/L")
     st.write(f"**Interpretação:** {interpretacao}")
 
+    pato = int(indice_bucal)
+    periodontal = (((pato * 1.234) * 0.3) + (periodontal * 0.7))
+    neuro = (((pato * 1.234) * 0.3) + (neuro * 0.7))
     col1, col2 = st.columns(2)
     with col1:
         st.subheader("Índice de Doenças Periodontais")
         st.progress(periodontal/100)
-        st.metric("Probabilidade", f"{periodontal}%")
+        st.metric("Probabilidade", f"{periodontal:.0f}%")
         try:
             st.image("assets/boca.png", use_container_width=True)
         except:
@@ -154,15 +169,110 @@ if st.button("🔬 Analisar Amostra", use_container_width=True):
     with col2:
         st.subheader("Índice de Risco Neurodegenerativo")
         st.progress(neuro/100)
-        st.metric("Probabilidade", f"{neuro}%")
+        st.metric("Probabilidade", f"{neuro:.0f}%")
         try:
             st.image("assets/cabeca.png", use_container_width=True)
         except:
             st.info("Adicione assets/cabeca.png")
     st.divider()
-    st.subheader("Relatório de Hábitos Bucais")
 
-    st.subheader("Relatório de Hábitos Bucais")
+
+    rebec = ((81 - float(pato)) / 81) * 100
+    rebec = max(0, min(100, rebec))
+
+    raio = 90
+    circ = 2 * math.pi * raio
+    offset = circ * (1 - rebec / 100)
+
+    components.html(f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <style>
+
+    body {{
+        margin:0;
+        background:transparent;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        font-family:Arial, Helvetica, sans-serif;
+    }}
+
+    .container {{
+        text-align:center;
+    }}
+
+    h2 {{
+        color:white;
+        margin-bottom:20px;
+        font-size:32px;
+    }}
+
+    .porcentagem {{
+        font-size:46px;
+        font-weight:bold;
+        fill:white;
+    }}
+
+    .sub {{
+        font-size:18px;
+        fill:#B388FF;
+    }}
+
+    </style>
+    </head>
+
+    <body>
+
+    <div class="container">
+
+    <h2>Relatório de Hábitos Bucais</h2>
+
+    <svg width="240" height="240">
+
+        <!-- Fundo -->
+        <circle
+            cx="120"
+            cy="120"
+            r="{raio}"
+            stroke="#2D2D3A"
+            stroke-width="16"
+            fill="none"
+        />
+
+        <!-- Progresso -->
+        <circle
+            cx="120"
+            cy="120"
+            r="{raio}"
+            stroke="#8B5CF6"
+            stroke-width="16"
+            fill="none"
+            stroke-linecap="round"
+            stroke-dasharray="{circ}"
+            stroke-dashoffset="{offset}"
+            transform="rotate(-90 120 120)"
+            style="
+                transition:stroke-dashoffset .8s ease;
+            "
+        />
+
+        <text
+            x="120"
+            y="128"
+            text-anchor="middle"
+            class="porcentagem">
+            {rebec:.0f}%
+        </text>
+
+    </svg>
+
+    </div>
+
+    </body>
+    </html>
+    """, height=320)
 
     if indice_bucal <= 20:
 
