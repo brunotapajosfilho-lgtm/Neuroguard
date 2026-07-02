@@ -275,6 +275,9 @@ if st.button("🔬 Analisar Amostra", use_container_width=True):
     """, height=320)
 
     st.write("")
+    st.write("")
+    st.write("")
+
 
     if indice_bucal <= 20:
 
