@@ -274,6 +274,8 @@ if st.button("🔬 Analisar Amostra", use_container_width=True):
     </html>
     """, height=320)
 
+    st.write("")
+
     if indice_bucal <= 20:
 
         st.success("🟢 Excelente Saúde Bucal")
@@ -382,7 +384,11 @@ if st.button("🔬 Analisar Amostra", use_container_width=True):
         st.image("assets/cerebro.png", use_container_width=True)
     except:
         st.info("Adicione assets/cerebro.png")
+    
 
     st.subheader("Observações")
     st.info("Protótipo para demonstração. Os resultados são simulados.")
 # python -m streamlit run neuroguard.py
+# git add .
+# git commit -m "nome"
+# git push
